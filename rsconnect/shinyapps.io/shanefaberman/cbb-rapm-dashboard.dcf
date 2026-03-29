@@ -1,0 +1,12 @@
+name: cbb-rapm-dashboard
+title: cbb-rapm-dashboard
+username: shanefaberman
+account: shanefaberman
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 17011439
+bundleId: 11777814
+url: https://shanefaberman.shinyapps.io/cbb-rapm-dashboard/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
