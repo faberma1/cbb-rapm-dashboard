@@ -49,7 +49,7 @@ smart_table_theme <- reactableTheme(
 ui <- page_navbar(
   id = "main_tabs",
   title = "Division 1 CBB RAPM",
-  fillable = FALSE,
+  fillable = c("Single-Season RAPM", "Multi-Year RAPM"),
   theme = bs_theme(bootswatch = "minty"),
   
   
@@ -219,6 +219,7 @@ ui <- page_navbar(
     title = "Single-Season RAPM",
 
     layout_sidebar(
+      fill = TRUE,
       sidebar = sidebar(
                         radioButtons("sport_single", "Sport:", choices = c("Men's", "Women's"), selected = "Men's", inline = TRUE),
                         selectInput("season_single", "Season:", choices = c("23-24", "24-25", "25-26"), multiple = FALSE, selected = "23-24"),
@@ -259,6 +260,7 @@ ui <- page_navbar(
   # multi year rapm
   nav_panel(
     title = "Multi-Year RAPM",
+    fill = TRUE,
     layout_sidebar(
       sidebar = sidebar(
                         radioButtons("sport_multi", "Sport:", choices = c("Men's", "Women's"), selected = "Men's", inline = TRUE),
@@ -382,9 +384,10 @@ server <- function(input, output, session) {
       
       # filter teams
       if (!is.null(input$team_single)) {
-        df2 <- df %>% filter(Team %in% input$team_single)
+        df2 <- df %>% filter(Team %in% input$team_single) %>% relocate(Player, ORAPM, DRAPM)
+        #print(names(df2))
       } else(
-        df2 <- df
+        df2 <- df %>% relocate(Player, ORAPM, DRAPM)
       )
   
       return(list(data=df2, bounds=global_bounds, non_filtered_data=df))
@@ -519,7 +522,7 @@ server <- function(input, output, session) {
         filter(n > 1) %>% 
         pull(Player)
       
-      df <- df %>% filter(!(Player %in% exclude))
+      df <- df %>% filter(!(Player %in% exclude)) %>% relocate(Player, ORAPM, DRAPM)
       
       
       global_bounds <- list(
@@ -620,4 +623,6 @@ server <- function(input, output, session) {
 # Run the application 
 shinyApp(ui = ui, server = server)
 
+#df <- read_csv("/Users/shanefaberman/cbb-rapm-dashboard/WBB/23-24/no_prior_rapm.csv") %>% 
+#  relocate(player)
 
